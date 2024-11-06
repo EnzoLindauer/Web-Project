@@ -72,15 +72,36 @@ if (j === 9) {//easy, 10 mines
  
      }
      
+     
 
 }
 
-
+printMap(i, j);
 
 
 }
 
+function printMap(i, j){
 
+    const table = document.createElement("table");
+
+    for(let x = 0; x < i; x++){
+        const row = document.createElement("tr");
+        row.id = `${x}`;
+        for(let y = 0; y < j; y++){
+
+            const cell = document.createElement("td");
+            cell.id = `${x}-${y}`;
+            row.appendChild(cell);
+
+            cell.style.border = "1px solid black";
+            cell.style.padding = "10px";
+        }
+        table.appendChild(row);
+    }
+    const map = document.getElementById("map"); // MUST HAVE THE DIV ID BE MAP THAT WILL BE WHERE WE PLACE THE MAP
+    map.appendChild(table);
+}
 
  
 
