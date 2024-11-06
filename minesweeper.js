@@ -46,8 +46,39 @@ printMap(i, j);
 
 }
 
+function printMap(i, j){
 
+    const table = document.createElement("table"); // this will create the general table
 
+    for(let x = 0; x < i; x++){
+        const row = document.createElement("tr");// this will represent the row at x in the table
+        row.id = `${x}`;
+        for(let y = 0; y < j; y++){
+
+            const cell = document.createElement("td");// this will be the single cell
+            cell.id = `${x}-${y}`;// the id will contain the coordinates of the cell seperated by a "-"
+            row.appendChild(cell);
+
+            cell.style.border = "1px solid black";
+            cell.style.padding = "10px";
+
+            cell.onclick = function() {// this will allow this cell to call this specfic function with the parameters being its coords
+                clickEvent(x, y);
+            };
+        }
+        table.appendChild(row);
+    }
+    const map = document.getElementById("map"); // MUST HAVE THE DIV ID BE MAP THAT WILL BE WHERE WE PLACE THE MAP
+    map.appendChild(table);
+
+}
+
+function clickEvent(i,j){ // this will give us the specific cell that we want the event to be attached to
+// my idea is to do BFS search and at each element the style will change and it will stop when it reaches the bound or a value that is not 0
+    const cell = document.getElementById(`${i}-${j}`);
+    
+    cell.style.backgroundColor = "red";
+}
  
 
 function getRandomInt(min, max) {
@@ -78,5 +109,3 @@ function incrementSurrounding(i, j){
     
 }
   
-generateMap(9,9);
-console.log(matrix);
