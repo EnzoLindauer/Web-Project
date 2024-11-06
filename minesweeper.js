@@ -14,60 +14,16 @@ for (let k = 0; k < i; k++) {
 
 
 
-var mineAmmount ;
+var mineAmount ;
 if (j === 9) {//easy, 10 mines
-    mineAmmount = 10;
+    mineAmount = 10;
 }else if(j === 16){//normal, 40 mines
-<<<<<<< HEAD
-
-    for(let k = 0; k < 40; k++ ){
-        let bombIndexI = getRandomInt(0,i-1);
-        let bombIndexJ = getRandomInt(0,j-1);
-        
-         if (matrix[bombIndexI][bombIndexJ] === -1) {
-             k--;
-             continue;
-     
-         }
- 
-         matrix[bombIndexI][bombIndexJ] = -1;
-         incrementSurrounding(bombIndexI, bombIndexJ);
- 
- 
-     }
-     
-
-}else{//expert/ 99 mines
-
-    for(let k = 0; k < 99; k++ ){
-        let bombIndexI = getRandomInt(0,i-1);
-        let bombIndexJ = getRandomInt(0,j-1);
-        
-         if (matrix[bombIndexI][bombIndexJ] === -1) {
-             k--;
-             continue;
-     
-         }
- 
-         matrix[bombIndexI][bombIndexJ] = -1;
-         incrementSurrounding(bombIndexI, bombIndexJ);
- 
- 
- 
-     }
-     
-     
-
-}
-
-printMap(i, j);
-=======
-    mineAmmount = 40;
+    mineAmount = 40;
 }else{//expert 99 mines
-    mineAmmount = 99;
+    mineAmount = 99;
 }
 
-for(let k = 0; k < parseInt(mineAmmount); k++ ){
+for(let k = 0; k < parseInt(mineAmount); k++ ){
     let bombIndexI = getRandomInt(0,i-1);
     let bombIndexJ = getRandomInt(0,j-1);
     
@@ -85,33 +41,12 @@ for(let k = 0; k < parseInt(mineAmmount); k++ ){
 
  }
 
-
->>>>>>> 4046e473761f64fbf9bab87dc69c4ea632001f57
+printMap(i, j);
 
 
 }
 
-function printMap(i, j){
 
-    const table = document.createElement("table");
-
-    for(let x = 0; x < i; x++){
-        const row = document.createElement("tr");
-        row.id = `${x}`;
-        for(let y = 0; y < j; y++){
-
-            const cell = document.createElement("td");
-            cell.id = `${x}-${y}`;
-            row.appendChild(cell);
-
-            cell.style.border = "1px solid black";
-            cell.style.padding = "10px";
-        }
-        table.appendChild(row);
-    }
-    const map = document.getElementById("map"); // MUST HAVE THE DIV ID BE MAP THAT WILL BE WHERE WE PLACE THE MAP
-    map.appendChild(table);
-}
 
  
 
