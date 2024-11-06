@@ -103,7 +103,7 @@ function incrementSurrounding(i, j){
                 index_value = matrix[i + x][j + y];
                 if(!(index_value === matrix[i][j] || index_value === -1)){// if not in the bound or not bomb
 
-                    matrix[i + x][i + y]++;
+                    matrix[i + x][j + y]++;
                 }
             }
             
