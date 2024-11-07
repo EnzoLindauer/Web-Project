@@ -82,6 +82,7 @@ function clickEvent(i,j){ // this will give us the specific cell that we want th
 
         cell.style.backgroundColor = "red";
         cell.textContent = matrix[i][j];
+        cell.onclick = null;
     }else{//this cell has no bomb next to it therefore you will have to BFS and show all cells that are also = 0
 
         clearEvent(i, j);
