@@ -59,8 +59,6 @@ function printMap(i, j){
             cell.id = `${x}-${y}`;// the id will contain the coordinates of the cell seperated by a "-"
             row.appendChild(cell);
 
-            cell.style.border = "1px solid black";
-            cell.style.padding = "10px";
 
             cell.onclick = function() {// this will allow this cell to call this specfic function with the parameters being its coords
                 clickEvent(x, y);
@@ -77,7 +75,73 @@ function clickEvent(i,j){ // this will give us the specific cell that we want th
 // my idea is to do BFS search and at each element the style will change and it will stop when it reaches the bound or a value that is not 0
     const cell = document.getElementById(`${i}-${j}`);
     
-    cell.style.backgroundColor = "red";
+    if(matrix[i][j] === - 1){// end the game
+
+        cell.style.backgroundColor = "black";
+    }else if(matrix[i][j] !== 0){//this cell would have a bomb next to it so just show this cell
+
+        cell.style.backgroundColor = "red";
+        cell.textContent = matrix[i][j];
+    }else{//this cell has no bomb next to it therefore you will have to BFS and show all cells that are also = 0
+
+        clearEvent(i, j);
+    }
+}
+
+function clearEvent(i, j) {
+    const queue = [[i, j]];
+    const marked = [];
+    
+    // Initialize marked array
+    for (let k = 0; k < matrix.length; k++) {
+        marked[k] = [];
+        for (let p = 0; p < matrix[0].length; p++) {
+            marked[k][p] = 0;  // Initialize with zeros
+        }
+    }
+    
+    marked[i][j] = 1; // Start position marked as visited
+    const cell = document.getElementById(`${i}-${j}`);
+    cell.style.backgroundColor = "blue";
+    
+    while (queue.length > 0) {
+        const [currentX, currentY] = queue.shift();
+        console.log(`Visiting cell (${currentX}, ${currentY}) with value: ${matrix[currentX][currentY]}`);
+        
+        // Define direct neighbors (up, down, left, right)
+        const directions = [
+            [0, 1],   // right
+            [1, 0],   // down
+            [0, -1],  // left
+            [-1, 0]   // up
+        ];
+        
+        for (const [dx, dy] of directions) {
+            const newX = currentX + dx;
+            const newY = currentY + dy;
+            
+            if (inBound(newX, newY) && marked[newX][newY] === 0) {
+                marked[newX][newY] = 1;  // Mark as visited
+                const cell = document.getElementById(`${newX}-${newY}`);
+                cell.style.backgroundColor = "blue"; // this is going to be where we want to make the changes.
+                
+                if (matrix[newX][newY] === 0) {
+                    queue.push([newX, newY]);  // Continue BFS only for cells with 0
+                }else{// seperate call for cells that are not 0
+
+                    cell.textContent = matrix[newX][newY];
+                }
+
+                cell.onclick = null;
+            }
+        }
+    }
+}
+
+
+function inBound(i, j){
+
+    return i >= 0 && i < matrix.length && j >= 0 && j < matrix[0].length;
 }
  
 
