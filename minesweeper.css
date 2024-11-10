@@ -6,6 +6,12 @@ td {
     text-align: center;
     
 }
+
+@font-face {
+    font-family: digital7;
+    src: url(assets/digital-7.ttf);
+}
+
 #difficulties{
 
     width: 10%;
@@ -13,7 +19,7 @@ td {
     display: flex;
     align-items: row;
     justify-content: center;
-    gap: 30%;
+    gap: 20%;
     margin: 0 auto;
 }
 
@@ -28,8 +34,6 @@ body{
 }
 
 #play-area{
-
-    
 
     padding: 0.5%;
     background-color: #444c54;
@@ -50,4 +54,33 @@ body{
     border-bottom: 4px solid #788088;
     border-top: 4px solid #1e262e;
     border-left: 4px solid #1e262e;
+}
+
+#score-area{
+
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    background-color: #444c54;
+    border-right: 4px solid #788088;
+    border-bottom: 4px solid #788088;
+    border-top: 4px solid #1e262e;
+    border-left: 4px solid #1e262e;
+}
+
+.score-design{
+
+    background-color: black;
+    border-right: 2px solid #788088;
+    border-bottom: 2px solid #788088;
+    border-top: 2px solid #1e262e;
+    border-left: 2px solid #1e262e;
+    font-family: digital7;
+
+    width: 5vw;
+    height: 4vh;
+    margin: 5px;
 }
