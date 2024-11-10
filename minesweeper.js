@@ -59,10 +59,14 @@ function printMap(i, j){
             cell.id = `${x}-${y}`;// the id will contain the coordinates of the cell seperated by a "-"
             row.appendChild(cell);
 
-
             cell.onclick = function() {// this will allow this cell to call this specfic function with the parameters being its coords
                 clickEvent(x, y);
             };
+            cell.oncontextmenu = function(event) {
+
+                event.preventDefault();
+                flagEvent(x,y);
+            }
         }
         table.appendChild(row);
     }
@@ -71,17 +75,34 @@ function printMap(i, j){
 
 }
 
+function flagEvent(i, j){
+
+    const cell = document.getElementById(`${i}-${j}`);
+
+    if(!cell.classList.contains('flagged')){//this is where you will incrememnt and decrement the bomb counter
+
+        cell.style.backgroundImage = `url(/cellassets/flag.png)`;
+        cell.classList.add('flagged');
+    }else{
+
+        cell.style.backgroundImage = "none";
+        cell.style.backgroundImage = `url(/cellassets/hover.png)`;
+        cell.classList.remove('flagged');
+    }
+}
+
 function clickEvent(i,j){ // this will give us the specific cell that we want the event to be attached to
 // my idea is to do BFS search and at each element the style will change and it will stop when it reaches the bound or a value that is not 0
     const cell = document.getElementById(`${i}-${j}`);
     
     if(matrix[i][j] === - 1){// end the game
 
-        cell.style.backgroundColor = "black";
+        cell.style.backgroundImage = "none";
+        cell.style.backgroundImage = "url('/assets/bomb.png')";
     }else if(matrix[i][j] !== 0){//this cell would have a bomb next to it so just show this cell
 
-        cell.style.backgroundColor = "red";
-        cell.textContent = matrix[i][j];
+        cell.style.backgroundImage = "none";
+        cell.style.backgroundImage = `url(/assets/${matrix[i][j]}.png)`;
         cell.onclick = null;
     }else{//this cell has no bomb next to it therefore you will have to BFS and show all cells that are also = 0
 
@@ -103,7 +124,8 @@ function clearEvent(i, j) {
     
     marked[i][j] = 1; // Start position marked as visited
     const cell = document.getElementById(`${i}-${j}`);
-    cell.style.backgroundColor = "blue";
+    cell.style.backgroundImage = "none";
+    cell.style.backgroundImage = "url('/cellassets/clicked.png')";
     
     while (queue.length > 0) {
         const [currentX, currentY] = queue.shift();
@@ -124,13 +146,17 @@ function clearEvent(i, j) {
             if (inBound(newX, newY) && marked[newX][newY] === 0) {
                 marked[newX][newY] = 1;  // Mark as visited
                 const cell = document.getElementById(`${newX}-${newY}`);
-                cell.style.backgroundColor = "blue"; // this is going to be where we want to make the changes.
                 
                 if (matrix[newX][newY] === 0) {
+
                     queue.push([newX, newY]);  // Continue BFS only for cells with 0
+                    cell.style.backgroundImage = "none";
+                    cell.style.backgroundImage = "url('/cellassets/clicked.png')";
+
                 }else{// seperate call for cells that are not 0
 
-                    cell.textContent = matrix[newX][newY];
+                    cell.style.backgroundImage = "none";
+                    cell.style.backgroundImage = `url(/assets/${matrix[newX][newY]}.png)`;
                 }
 
                 cell.onclick = null;

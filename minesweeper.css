@@ -1,10 +1,20 @@
 td {
 
-    border: 1px solid black;
+    background-image: url(/cellassets/hover.png);
+    background-size: cover;
     width: 20px;
     height: 20px;
     text-align: center;
+    margin: 0;
     
+}
+td:hover{
+
+    background-image: url(/cellassets/default.png);
+}
+tr{
+
+    margin: 0;;
 }
 
 @font-face {
@@ -19,7 +29,7 @@ td {
     display: flex;
     align-items: row;
     justify-content: center;
-    gap: 20%;
+    gap: 15%;
     margin: 0 auto;
 }
 
