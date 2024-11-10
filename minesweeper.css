@@ -31,6 +31,12 @@ tr{
     justify-content: center;
     gap: 15%;
     margin: 0 auto;
+    
+}
+
+button{
+
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 body{
@@ -64,6 +70,12 @@ body{
     border-bottom: 4px solid #788088;
     border-top: 4px solid #1e262e;
     border-left: 4px solid #1e262e;
+    
+}
+
+#map{
+
+    margin-left: auto;
 }
 
 #score-area{
@@ -90,7 +102,17 @@ body{
     border-left: 2px solid #1e262e;
     font-family: digital7;
 
-    width: 5vw;
+    width: 4.5vw;
     height: 4vh;
     margin: 5px;
+
+}
+
+.red{
+
+    color: red;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 40px;
 }
