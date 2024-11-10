@@ -1,4 +1,21 @@
 const matrix = [];
+const bomblocale = [];
+const map = document.getElementById("map");
+
+
+function createBomblocale(mineammount){//makes bombLocale store the i and j indices of the bombs , matrix of mineammount by 2 , as coordinates are i an j
+    for (let k = 0; k < mineammount; k++) {
+        bomblocale[k] = [];
+        for (let p = 0; p < 2; p++) {
+            bomblocale[k][p] = parseInt(0);  // Initialize with zeros or any default value
+            }
+          }
+
+
+}
+
+
+
 
 function generateMap(i,j){// i and j passed as arguements , they indicate the dimensions of the minesweeper map , passed per difficulty selection, I is rows and J is columns
 
@@ -23,6 +40,8 @@ if (j === 9) {//easy, 10 mines
     mineAmount = 99;
 }
 
+createBomblocale(mineAmount);
+
 for(let k = 0; k < parseInt(mineAmount); k++ ){
     let bombIndexI = getRandomInt(0,i-1);
     let bombIndexJ = getRandomInt(0,j-1);
@@ -32,6 +51,10 @@ for(let k = 0; k < parseInt(mineAmount); k++ ){
          continue;
  
      }
+
+      //store locations of bombs in bomblocale
+      bomblocale[k][0] = parseInt(bombIndexI);
+      bomblocale[k][1] = parseInt(bombIndexJ);
 
      matrix[bombIndexI][bombIndexJ] = parseInt(-1);
      incrementSurrounding(parseInt(bombIndexI), parseInt(bombIndexJ));
@@ -59,7 +82,7 @@ function printMap(i, j){
             cell.id = `${x}-${y}`;// the id will contain the coordinates of the cell seperated by a "-"
             row.appendChild(cell);
 
-            cell.onclick = function() {// this will allow this cell to call this specfic function with the parameters being its coords
+            cell.onclick = function() {// this will allow this cell to call this specific function with the parameters being its coords
                 clickEvent(x, y);
             };
             cell.oncontextmenu = function(event) {
@@ -75,6 +98,17 @@ function printMap(i, j){
 
 }
 
+
+
+function degenerateMap(){
+
+
+
+        
+
+
+
+}
 function flagEvent(i, j){
 
     const cell = document.getElementById(`${i}-${j}`);
@@ -97,8 +131,11 @@ function clickEvent(i,j){ // this will give us the specific cell that we want th
     
     if(matrix[i][j] === - 1){// end the game
 
-        cell.style.backgroundImage = "none";
-        cell.style.backgroundImage = "url('/assets/bomb.png')";
+        endGameLoss();
+
+
+       // cell.style.backgroundImage = "none";
+        //cell.style.backgroundImage = "url('/assets/bomb.png')";
     }else if(matrix[i][j] !== 0){//this cell would have a bomb next to it so just show this cell
 
         cell.style.backgroundImage = "none";
@@ -165,12 +202,10 @@ function clearEvent(i, j) {
     }
 }
 
-
 function inBound(i, j){
 
     return i >= 0 && i < matrix.length && j >= 0 && j < matrix[0].length;
 }
- 
 
 function getRandomInt(min, max) {
     min = Math.ceil(min);    // Round up to include the min value
@@ -199,4 +234,42 @@ function incrementSurrounding(i, j){
     }
     
 }
+function endGameLoss(){//invoke when the player clicks on bomb
+    //print to user that they lost , and reveal all bombs using the bomblocale matrix, 
+    //make the play area uninteractable as the player lost and needs to start anew
+    for(let i = 0 ; i < bomblocale.length; i++){
+
+        let currentBombIndexI = bomblocale[i][0];
+        let currentBombIndexJ = bomblocale[i][1];
+
+        let currentBomb  = document.getElementById(`${currentBombIndexI}-${currentBombIndexJ}`);
+
+        currentBomb.style.backgroundImage = "none";
+        currentBomb.style.backgroundImage = "url('/assets/bomb.png')";
+
+    }
+    makeUnclickable();
+}
+function makeUnclickable(){// makes minefield unclickable , invoke upon victory or loss
+
+    const tiles = document.querySelectorAll("td");
+    tiles.forEach(function(currentTile) {
+      currentTile.addEventListener('click', function(clickEvent) {
+
+        clickEvent.preventDefault(); // prevents the default behaviour , so clicking wont do anything
+        clickEvent.stopPropagation(); // to prevent side effects when going up the dom tree, i believe in our case its redundant but just in case
+
+      });
+
+      currentTile.style.pointerEvents = 'none'; //makes the mouse effectively ignore the tile
+      currentTile.style.opacity = '0.5'; // make the tile dimmer as a visual indicator that the tile is unclickable
+
+    });
+  }
   
+
+
+
+function makeClickable(){// makes minefield clickable , invoke upon resetting the minefield post loss or victory
+
+}
