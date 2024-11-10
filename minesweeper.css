@@ -4,4 +4,50 @@ td {
     width: 20px;
     height: 20px;
     text-align: center;
+    
+}
+#difficulties{
+
+    width: 10%;
+    height: 10%;
+    display: flex;
+    align-items: row;
+    justify-content: center;
+    gap: 30%;
+    margin: 0 auto;
+}
+
+body{
+
+    background-color: #181a1b;
+}
+
+.box-style{
+ 
+    box-sizing: border-box;
+}
+
+#play-area{
+
+    
+
+    padding: 0.5%;
+    background-color: #444c54;
+    border-top: 4px solid #788088;
+    border-left: 4px solid #788088;
+    border-right: 4px solid #1e262e;
+    border-bottom: 4px solid #1e262e;
+
+    width: fit-content;
+    margin: auto;
+    
+}
+
+#game-area{
+
+    background-color: #444c54;
+    border-right: 4px solid #788088;
+    border-bottom: 4px solid #788088;
+    border-top: 4px solid #1e262e;
+    border-left: 4px solid #1e262e;
 }
