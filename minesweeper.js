@@ -3,7 +3,7 @@ const bomblocale = [];
 const map = document.getElementById("map");
 let diffptr;
 let time_started = false;// MAKE SURE TO RESET THESE ELEMENTS UPON A WIN OR A LOSS
-
+let marked = [];
 let time_count = 0;
 let bomb_count = 0;
 let tile_count = 0;
@@ -117,6 +117,13 @@ for (let k = 0; k < i; k++) {
       }
       //console.log(matrix);
 
+for (let k = 0; k < matrix.length; k++) {
+        marked[k] = [];
+        for (let p = 0; p < matrix[0].length; p++) {
+            marked[k][p] = parseInt(0);  // Initialize with zeros
+        }
+    }
+
 
       
 
@@ -223,8 +230,9 @@ function handleWin() {
         startTimer();
         time_started = true;
     }
-
+    
     const cell = document.getElementById(`${i}-${j}`);
+
 
     // If this is a bomb, end the game
     if (matrix[i][j] === -1) {
@@ -239,25 +247,18 @@ function handleWin() {
         cell.style.backgroundImage = `url(/assets/${matrix[i][j]}.png)`;
         cell.onclick = null; // Prevent re-clicking
         tile_count--;
-
+        
         // Check for win after decrementing
         if (tile_count === 0) handleWin();
     } else { // If it's an empty cell, clear surrounding cells
         clearEvent(i, j);
     }
+    console.log(tile_count);
 }
 
 
 function clearEvent(i, j) {
     const queue = [[i, j]];
-    let marked = [];
-
-    for (let k = 0; k < matrix.length; k++) {
-        marked[k] = [];
-        for (let p = 0; p < matrix[0].length; p++) {
-            marked[k][p] = parseInt(0);  // Initialize with zeros
-        }
-    }
 
     marked[i][j] = parseInt(1); // Mark starting cell as visited
     const cell = document.getElementById(`${i}-${j}`);
@@ -265,7 +266,7 @@ function clearEvent(i, j) {
     cell.style.backgroundImage = "url('/cellassets/clicked.png')";
 
     tile_count--; // Decrement for the first cell
-    if (tile_count === 0) handleWin(); // Check for win
+    if (tile_count === 0) handleWin(); 
 
     while (queue.length > 0) {
         const [currentX, currentY] = queue.shift();
@@ -282,7 +283,7 @@ function clearEvent(i, j) {
             const newX = currentX + dx;
             const newY = currentY + dy;
 
-            if (inBound(newX, newY) && marked[newX][newY] !== parseInt(1)) {
+            if (inBound(newX, newY) && marked[newX][newY] !== parseInt(1) && matrix[newX][newY] !== parseInt(-1)) {
 
                 marked[newX][newY] = parseInt(1); 
                 const neighborCell = document.getElementById(`${newX}-${newY}`);
@@ -292,14 +293,20 @@ function clearEvent(i, j) {
                     queue.push([newX, newY]);
                     neighborCell.style.backgroundImage = "none";
                     neighborCell.style.backgroundImage = "url('/cellassets/clicked.png')";
+                    
+                    
 
                 } else if (matrix[newX][newY] > 0) { 
                     neighborCell.style.backgroundImage = "none";
                     neighborCell.style.backgroundImage = `url(/assets/${matrix[newX][newY]}.png)`;
+                    
+                    
                 }
 
                 neighborCell.onclick = null;
+                
                 tile_count--;
+                console.log(time_count);
                 if (tile_count === 0) handleWin();
             }
         }
