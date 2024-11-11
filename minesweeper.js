@@ -13,6 +13,17 @@ function resetLocalStorage() {
 
   }
 
+function pauseTimer() {
+    clearInterval(timerInterval); // Stops the timer
+    time_started = false; // Allows the timer to be started again if needed
+}
+
+function resetTimer() {
+    clearInterval(timerInterval); // Stop the timer
+    time_started = false; // Reset the timer state
+    time_elapsed = 0; // Reset the time elapsed
+    document.getElementById('time-count').textContent = timeElapsed; // Reset display
+  }
 
 function startTimer() {
     timerInterval = setInterval(() => {
@@ -69,7 +80,6 @@ function startTimer() {
   document.addEventListener("DOMContentLoaded", () => {
     initializeScores();
     displayScores();
-    updateScores("beginner", 0);
   });
 
 function createBomblocale(mineammount){//makes bombLocale store the i and j indices of the bombs , matrix of mineammount by 2 , as coordinates are i an j
@@ -100,18 +110,21 @@ for (let k = 0; k < i; k++) {
 
 
 
-var mineAmount ;
+
 if (j === 9) {//easy, 10 mines
-    mineAmount = 10;
+    bomb_count = 10;
+    tile_count = 9*9;
 }else if(j === 16){//normal, 40 mines
-    mineAmount = 40;
+    bomb_count = 40;
+    tile_count = 16*16;
 }else{//expert 99 mines
-    mineAmount = 99;
+    bomb_count = 99;
+    tile_count = 16*30;
 }
 
-createBomblocale(mineAmount);
+createBomblocale(bomb_count);
 
-for(let k = 0; k < parseInt(mineAmount); k++ ){
+for(let k = 0; k < parseInt(bomb_count); k++ ){
     let bombIndexI = getRandomInt(0,i-1);
     let bombIndexJ = getRandomInt(0,j-1);
     
@@ -207,11 +220,19 @@ function clickEvent(i,j){ // this will give us the specific cell that we want th
 
     const cell = document.getElementById(`${i}-${j}`);
     
-    if(matrix[i][j] === - 1){// end the game
+    if(tile_count-- === bomb_count){
+
+        //win
+        resetTimer();
+        bomb_count = 0;
+        tile_count= 0;
+    }
+    else if(matrix[i][j] === - 1){// end the game
 
         endGameLoss();
-
-
+        resetTimer();
+        bomb_count = 0;
+        tile_count= 0;
        // cell.style.backgroundImage = "none";
         //cell.style.backgroundImage = "url('/assets/bomb.png')";
     }else if(matrix[i][j] !== 0){//this cell would have a bomb next to it so just show this cell
@@ -219,6 +240,7 @@ function clickEvent(i,j){ // this will give us the specific cell that we want th
         cell.style.backgroundImage = "none";
         cell.style.backgroundImage = `url(/assets/${matrix[i][j]}.png)`;
         cell.onclick = null;
+
     }else{//this cell has no bomb next to it therefore you will have to BFS and show all cells that are also = 0
 
         clearEvent(i, j);
@@ -275,6 +297,7 @@ function clearEvent(i, j) {
                 }
 
                 cell.onclick = null;
+                tile_count--;
             }
         }
     }
