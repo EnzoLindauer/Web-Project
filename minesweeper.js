@@ -69,7 +69,19 @@ printMap(i, j);
 
 }
 
+
+function clearMap() {
+    const map = document.getElementById("map");
+    while (map.firstChild) {
+        map.removeChild(map.firstChild);
+    }
+}
+
+
 function printMap(i, j){
+
+    clearMap();
+    
 
     const table = document.createElement("table"); // this will create the general table
 
@@ -269,7 +281,3 @@ function makeUnclickable(){// makes minefield unclickable , invoke upon victory 
   
 
 
-
-function makeClickable(){// makes minefield clickable , invoke upon resetting the minefield post loss or victory
-
-}
