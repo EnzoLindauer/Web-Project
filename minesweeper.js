@@ -1,9 +1,13 @@
 const matrix = [];
 const bomblocale = [];
-const map = document.getElementById("map");
+//const map = document.getElementById("map");
+var difficulty ;
 
 
-function createBomblocale(mineammount){//makes bombLocale store the i and j indices of the bombs , matrix of mineammount by 2 , as coordinates are i an j
+
+function createBomblocale(mineammount){
+    //makes bombLocale store the i and j indices of the bombs , matrix of mineammount by 2 , as coordinates are i an j
+    bomblocale.length = mineammount;
     for (let k = 0; k < mineammount; k++) {
         bomblocale[k] = [];
         for (let p = 0; p < 2; p++) {
@@ -11,6 +15,7 @@ function createBomblocale(mineammount){//makes bombLocale store the i and j indi
             }
           }
 
+           //console.log(bomblocale);
 
 }
 
@@ -19,6 +24,7 @@ function createBomblocale(mineammount){//makes bombLocale store the i and j indi
 
 function generateMap(i,j){// i and j passed as arguements , they indicate the dimensions of the minesweeper map , passed per difficulty selection, I is rows and J is columns
 
+    
 
     // i is rows, j is columns
 for (let k = 0; k < i; k++) {
@@ -34,12 +40,15 @@ for (let k = 0; k < i; k++) {
 var mineAmount ;
 if (j === 9) {//easy, 10 mines
     mineAmount = 10;
+    difficulty  = "Easy";
 }else if(j === 16){//normal, 40 mines
     mineAmount = 40;
+    difficulty  = "Intermediate";
 }else{//expert 99 mines
     mineAmount = 99;
+     difficulty = "Expert";
 }
-
+//console.log("mine ammount is " + mineAmount);
 createBomblocale(mineAmount);
 
 for(let k = 0; k < parseInt(mineAmount); k++ ){
@@ -63,6 +72,7 @@ for(let k = 0; k < parseInt(mineAmount); k++ ){
 
 
  }
+ //console.log(bomblocale);
 
 printMap(i, j);
 
@@ -71,8 +81,8 @@ printMap(i, j);
 
 function printMap(i, j){
 
+   
     clearMap();
-
     const table = document.createElement("table"); // this will create the general table
 
     for(let x = 0; x < i; x++){
@@ -100,17 +110,6 @@ function printMap(i, j){
 
 }
 
-
-
-function degenerateMap(){
-
-
-
-        
-
-
-
-}
 function flagEvent(i, j){
 
     const cell = document.getElementById(`${i}-${j}`);
@@ -243,18 +242,23 @@ function endGameLoss(){//invoke when the player clicks on bomb
 
         let currentBombIndexI = bomblocale[i][0];
         let currentBombIndexJ = bomblocale[i][1];
+       
 
         let currentBomb  = document.getElementById(`${currentBombIndexI}-${currentBombIndexJ}`);
+        if(currentBomb === null){
+            console.log(currentBombIndexI);
+            console.log(currentBombIndexJ);
+        }
 
         currentBomb.style.backgroundImage = "none";
         currentBomb.style.backgroundImage = "url('/assets/bomb.png')";
 
     }
     makeUnclickable();
+    
 }
 function makeUnclickable(){// makes minefield unclickable , invoke upon victory or loss
-
-    const tiles = document.querySelectorAll("td");
+    var tiles = document.querySelectorAll("td");
     tiles.forEach(function(currentTile) {
       currentTile.addEventListener('click', function(clickEvent) {
 
@@ -272,9 +276,7 @@ function makeUnclickable(){// makes minefield unclickable , invoke upon victory 
 
 
 
-function makeClickable(){// makes minefield clickable , invoke upon resetting the minefield post loss or victory
 
-}
 
 
   
@@ -283,4 +285,5 @@ function clearMap() {
     while (map.firstChild) {
         map.removeChild(map.firstChild);
     }
+   
 }
