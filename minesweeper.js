@@ -1,7 +1,7 @@
 const matrix = [];
 const bomblocale = [];
 const map = document.getElementById("map");
-var difficulty;
+var diffptr;
 let time_started = false;// MAKE SURE TO RESET THESE ELEMENTS UPON A WIN OR A LOSS
 let time_elapsed = 0; 
 let time_count = 0;
@@ -109,13 +109,13 @@ for (let k = 0; k < i; k++) {
 var mineAmount ;
 if (j === 9) {//easy, 10 mines
     mineAmount = 10;
-    difficulty  = "Easy";
+    diffptr  = "Easy";
 }else if(j === 16){//normal, 40 mines
     mineAmount = 40;
-    difficulty  = "Intermediate";
+    diffptr  = "Intermediate";
 }else{//expert 99 mines
     mineAmount = 99;
-     difficulty = "Expert";
+     diffptr = "Expert";
 }
 //console.log("mine ammount is " + mineAmount);
 createBomblocale(mineAmount);
@@ -136,10 +136,6 @@ for(let k = 0; k < parseInt(mineAmount); k++ ){
 
      matrix[bombIndexI][bombIndexJ] = parseInt(-1);
      incrementSurrounding(parseInt(bombIndexI), parseInt(bombIndexJ));
-
-
-
-
  }
  //console.log(bomblocale);
 
