@@ -71,6 +71,8 @@ printMap(i, j);
 
 function printMap(i, j){
 
+    clearMap();
+
     const table = document.createElement("table"); // this will create the general table
 
     for(let x = 0; x < i; x++){
@@ -276,3 +278,9 @@ function makeClickable(){// makes minefield clickable , invoke upon resetting th
 
 
   
+function clearMap() {
+    const map = document.getElementById("map");
+    while (map.firstChild) {
+        map.removeChild(map.firstChild);
+    }
+}
