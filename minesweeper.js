@@ -63,7 +63,7 @@ for(let k = 0; k < parseInt(mineAmount); k++ ){
 
 
  }
-
+console.log("printing map");
 printMap(i, j);
 
 
