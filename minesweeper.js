@@ -17,20 +17,23 @@ function resetLocalStorage() {
 function pauseTimer() {
     clearInterval(timerInterval); // Stops the timer
     time_started = false; // Allows the timer to be started again if needed
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 }
 
 function resetTimer() {
     clearInterval(timerInterval); // Stop the timer
     time_started = false; // Reset the timer state
-    time_elapsed = 0; // Reset the time elapsed
-    document.getElementById('time-count').textContent = timeElapsed; // Reset display
+    time_count = 0; // Reset the time elapsed
+    document.getElementById('time-count').textContent = time_count; // Reset display
   }
 
 function startTimer() {
     timerInterval = setInterval(() => {
+    document.addEventListener("visibilitychange", handleVisibilityChange);
       time_count++;
       document.getElementById('time-count').textContent = time_count;
     }, 1000);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
   }
 
   function initializeScores(){
@@ -101,9 +104,11 @@ function createBomblocale(mineammount){
 
 
 
+
 function generateMap(i,j){// i and j passed as arguements , they indicate the dimensions of the minesweeper map , passed per difficulty selection, I is rows and J is columns
 
-    
+   
+
 
     // i is rows, j is columns
 for (let k = 0; k < i; k++) {
@@ -119,7 +124,7 @@ for (let k = 0; k < i; k++) {
 
 if (j === 9) {//easy, 10 mines
     bomb_count = 10;
-    diffptr  = "Easy";
+    diffptr  = "Beginner";
     tile_count = 9*9;
 }else if(j === 16){//normal, 40 mines
     bomb_count = 40;
@@ -224,7 +229,11 @@ function clickEvent(i,j){ // this will give us the specific cell that we want th
     else if(matrix[i][j] === - 1){// end the game
 
         endGameLoss();
-        resetTimer();
+        
+        promptForRetry();
+        
+       
+        //resetTimer();
         bomb_count = 0;
         tile_count= 0;
        // cell.style.backgroundImage = "none";
@@ -240,6 +249,33 @@ function clickEvent(i,j){ // this will give us the specific cell that we want th
         clearEvent(i, j);
     }
 }
+
+
+
+function promptForRetry(){
+
+    p = window.confirm("Try again?");
+    ResetOrGiveUp(p);
+
+}
+
+function ResetOrGiveUp(bool){
+
+    if(bool){//user wants to continue
+
+        generateMap(matrix.length,matrix[0].length);
+
+    }else{
+
+        window.alert("Thank you for playing.\n");
+
+
+    }
+
+}
+
+
+
 
 function clearEvent(i, j) {
     const queue = [[i, j]];
@@ -370,11 +406,28 @@ function makeUnclickable(){// makes minefield unclickable , invoke upon victory 
 
 
 
+function handleVisibilityChange() {
+    if (document.hidden) {
+      console.log("Page is hidden");
+      // Perform any actions needed when the page is not visible
+      pauseTimer(); // Example: pause the timer if game needs to be paused
+    } else {
+      console.log("Page is visible");
+      // Perform any actions needed when the page becomes visible
+      startTimer(); // Example: resume the timer if the game should continue
+    }
+  }
+  
+  
+  document.addEventListener("visibilitychange", handleVisibilityChange);
 
 
 
   
 function clearMap() {
+    
+    
+    
     const map = document.getElementById("map");
     while (map.firstChild) {
         map.removeChild(map.firstChild);
