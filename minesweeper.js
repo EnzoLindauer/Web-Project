@@ -32,8 +32,8 @@ function startTimer() {
     document.addEventListener("visibilitychange", handleVisibilityChange);
       time_count++;
       document.getElementById('time-count').textContent = time_count;
-    }, 1000);
-    document.addEventListener("visibilitychange", handleVisibilityChange);
+    }, 1000); 
+   document.addEventListener("visibilitychange", handleVisibilityChange);
   }
 
   function initializeScores(){
