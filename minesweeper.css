@@ -22,21 +22,18 @@ tr{
     src: url(assets/digital-7.ttf);
 }
 
-#difficulties{
-
-    width: 10%;
-    height: 10%;
+#difficulties {
     display: flex;
-    align-items: row;
     justify-content: center;
-    gap: 15%;
-    margin: 0 auto;
-    
+    gap: 10px;
+    width: fit-content;
+    margin: 10px auto;
 }
 
-button{
-
+button {
     font-family: Arial, Helvetica, sans-serif;
+    padding: 5px 10px;
+    margin: 0;
 }
 
 body{
@@ -59,7 +56,7 @@ body{
     border-bottom: 4px solid #1e262e;
 
     width: fit-content;
-    margin: auto;
+    margin: 0;
     
 }
 
@@ -115,4 +112,42 @@ body{
     justify-content: center;
     align-items: center;
     font-size: 40px;
+}
+
+#game{
+
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    margin: 0;
+    padding: 0;
+}
+
+#score-board{
+
+    width: 12.5%;
+    height: 100%;
+
+    background-color: #444c54;
+    border-right: 4px solid #788088;
+    border-bottom: 4px solid #788088;
+    border-top: 4px solid #1e262e;
+    border-left: 4px solid #1e262e;
+}
+
+.score-difficulties{
+
+    height: fit-content;
+    margin: 5px;
+
+    border-right: 4px solid #788088;
+    border-bottom: 4px solid #788088;
+    border-top: 4px solid #1e262e;
+    border-left: 4px solid #1e262e;
+}
+h2, p, h3, div{
+
+    margin: 0;
+    padding: 0;
+    
 }
