@@ -17,21 +17,23 @@ function resetLocalStorage() {
 function pauseTimer() {
     clearInterval(timerInterval); // Stops the timer
     time_started = false; // Allows the timer to be started again if needed
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 }
 
 function resetTimer() {
-    clearInterval(timerInterval); 
-    time_started = false; 
-    time_elapsed = 0; 
+    clearInterval(timerInterval); // Stop the timer
+    time_started = false; // Reset the timer state
     time_count = 0;
-    document.getElementById('time-count').textContent = 0;
+    document.getElementById('time-count').textContent = timeElapsed; // Reset display
   }
 
 function startTimer() {
     timerInterval = setInterval(() => {
+    document.addEventListener("visibilitychange", handleVisibilityChange);
       time_count++;
       document.getElementById('time-count').textContent = time_count;
     }, 1000);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
   }
 
   function initializeScores(){
@@ -104,9 +106,11 @@ function createBomblocale(mineammount){
 
 
 
+
 function generateMap(i,j){// i and j passed as arguements , they indicate the dimensions of the minesweeper map , passed per difficulty selection, I is rows and J is columns
 
-    
+   
+
 
     // i is rows, j is columns
 for (let k = 0; k < i; k++) {
@@ -123,7 +127,7 @@ for (let k = 0; k < i; k++) {
 if (j === 9) {//easy, 10 mines
     bomb_count = 10;
     diffptr  = "beginner";
-    
+    tile_count = 9*9;
 }else if(j === 16){//normal, 40 mines
     bomb_count = 40;
     diffptr  = "intermediate";
@@ -228,12 +232,17 @@ function handleWin() {
     // If this is a bomb, end the game
     if (matrix[i][j] === -1) {
         endGameLoss();
-        resetTimer();
-        return;
-    }
+        
+        promptForRetry();
+        
+       
+        //resetTimer();
+        bomb_count = 0;
+        tile_count= 0;
+       // cell.style.backgroundImage = "none";
+        //cell.style.backgroundImage = "url('/assets/bomb.png')";
+    }else if(matrix[i][j] !== 0){//this cell would have a bomb next to it so just show this cell
 
-    // Reveal the cell if it's not a bomb
-    if (matrix[i][j] !== 0) { // Numbered cell
         cell.style.backgroundImage = "none";
         cell.style.backgroundImage = `url(/assets/${matrix[i][j]}.png)`;
         cell.onclick = null; // Prevent re-clicking
@@ -245,6 +254,32 @@ function handleWin() {
         clearEvent(i, j);
     }
 }
+
+
+
+function promptForRetry(){
+
+    p = window.confirm("Try again?");
+    ResetOrGiveUp(p);
+
+}
+
+function ResetOrGiveUp(bool){
+
+    if(bool){//user wants to continue
+
+        generateMap(matrix.length,matrix[0].length);
+
+    }else{
+
+        window.alert("Thank you for playing.\n");
+
+
+    }
+
+}
+
+
 
 
 function clearEvent(i, j) {
@@ -379,11 +414,28 @@ function makeUnclickable(){// makes minefield unclickable , invoke upon victory 
 
 
 
+function handleVisibilityChange() {
+    if (document.hidden) {
+      console.log("Page is hidden");
+      // Perform any actions needed when the page is not visible
+      pauseTimer(); // Example: pause the timer if game needs to be paused
+    } else {
+      console.log("Page is visible");
+      // Perform any actions needed when the page becomes visible
+      startTimer(); // Example: resume the timer if the game should continue
+    }
+  }
+  
+  
+  document.addEventListener("visibilitychange", handleVisibilityChange);
 
 
 
   
 function clearMap() {
+    
+    
+    
     const map = document.getElementById("map");
     while (map.firstChild) {
         map.removeChild(map.firstChild);
