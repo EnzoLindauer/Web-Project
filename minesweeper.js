@@ -1,8 +1,77 @@
 const matrix = [];
 const bomblocale = [];
-//const map = document.getElementById("map");
-var difficulty ;
+const map = document.getElementById("map");
+var difficulty;
+let time_started = false;// MAKE SURE TO RESET THESE ELEMENTS UPON A WIN OR A LOSS
+let time_elapsed = 0; 
+let time_count = 0;
+let bomb_count = 0;
+let tile_count = 0;
 
+function resetLocalStorage() {
+
+    localStorage.removeItem('MinesweeperScores');
+
+  }
+
+
+function startTimer() {
+    timerInterval = setInterval(() => {
+      time_count++;
+      document.getElementById('time-count').textContent = time_count;
+    }, 1000);
+  }
+
+  function initializeScores(){
+
+    if(!localStorage.getItem('MinesweeperScores')){
+
+        fetch('minesweeper.json').then(response => response.json()).then(file => {
+
+            localStorage.setItem('MinesweeperScores', JSON.stringify(file));
+        }
+        ).catch(error => console.log(error));
+    }
+  }
+
+
+    function displayScores() {
+        const scores = JSON.parse(localStorage.getItem('MinesweeperScores'));
+        //Olex dont worry the '?' is just an if else so if it is = 999 then display 0 else display normally
+        
+        document.querySelector('#beginner-score-1').textContent = scores.beginner[0] === 999 ? 0 : scores.beginner[0];
+        document.querySelector('#beginner-score-2').textContent = scores.beginner[1] === 999 ? 0 : scores.beginner[1];
+        document.querySelector('#beginner-score-3').textContent = scores.beginner[2] === 999 ? 0 : scores.beginner[2];
+      
+        
+        document.querySelector('#intermediate-score-1').textContent = scores.intermediate[0] === 999 ? 0 : scores.intermediate[0];
+        document.querySelector('#intermediate-score-2').textContent = scores.intermediate[1] === 999 ? 0 : scores.intermediate[1];
+        document.querySelector('#intermediate-score-3').textContent = scores.intermediate[2] === 999 ? 0 : scores.intermediate[2];
+      
+        
+        document.querySelector('#expert-score-1').textContent = scores.expert[0] === 999 ? 0 : scores.expert[0];
+        document.querySelector('#expert-score-2').textContent = scores.expert[1] === 999 ? 0 : scores.expert[1];
+        document.querySelector('#expert-score-3').textContent = scores.expert[2] === 999 ? 0 : scores.expert[2];
+      }
+      
+
+  function updateScores(difficulty, timeTaken){
+
+    const scores = JSON.parse(localStorage.getItem('MinesweeperScores'));
+
+    scores[difficulty].push(timeTaken);
+    scores[difficulty].sort((a,b) => a-b);
+    scores[difficulty] = scores[difficulty].slice(0,3);
+
+    localStorage.setItem('MinesweeperScores', JSON.stringify(scores));
+    displayScores();
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    initializeScores();
+    displayScores();
+    updateScores("beginner", 0);
+  });
 
 
 function createBomblocale(mineammount){
@@ -128,6 +197,13 @@ function flagEvent(i, j){
 
 function clickEvent(i,j){ // this will give us the specific cell that we want the event to be attached to
 // my idea is to do BFS search and at each element the style will change and it will stop when it reaches the bound or a value that is not 0
+
+    if(!time_started){
+
+        startTimer();
+        time_started = true;
+    }
+
     const cell = document.getElementById(`${i}-${j}`);
     
     if(matrix[i][j] === - 1){// end the game
