@@ -1,9 +1,9 @@
 const matrix = [];
 const bomblocale = [];
 const map = document.getElementById("map");
-var diffptr;
+let diffptr;
 let time_started = false;// MAKE SURE TO RESET THESE ELEMENTS UPON A WIN OR A LOSS
-let time_elapsed = 0; 
+
 let time_count = 0;
 let bomb_count = 0;
 let tile_count = 0;
@@ -20,10 +20,11 @@ function pauseTimer() {
 }
 
 function resetTimer() {
-    clearInterval(timerInterval); // Stop the timer
-    time_started = false; // Reset the timer state
-    time_elapsed = 0; // Reset the time elapsed
-    document.getElementById('time-count').textContent = timeElapsed; // Reset display
+    clearInterval(timerInterval); 
+    time_started = false; 
+    time_elapsed = 0; 
+    time_count = 0;
+    document.getElementById('time-count').textContent = 0;
   }
 
 function startTimer() {
@@ -69,9 +70,10 @@ function startTimer() {
   function updateScores(difficulty, timeTaken){
 
     const scores = JSON.parse(localStorage.getItem('MinesweeperScores'));
-
+    
     scores[difficulty].push(timeTaken);
     scores[difficulty].sort((a,b) => a-b);
+    console.log(scores[difficulty]);
     scores[difficulty] = scores[difficulty].slice(0,3);
 
     localStorage.setItem('MinesweeperScores', JSON.stringify(scores));
@@ -81,6 +83,7 @@ function startTimer() {
   document.addEventListener("DOMContentLoaded", () => {
     initializeScores();
     displayScores();
+
   });
 
 
@@ -115,21 +118,21 @@ for (let k = 0; k < i; k++) {
       //console.log(matrix);
 
 
-
+      
 
 if (j === 9) {//easy, 10 mines
     bomb_count = 10;
-    diffptr  = "Easy";
-    tile_count = 9*9;
+    diffptr  = "beginner";
+    
 }else if(j === 16){//normal, 40 mines
     bomb_count = 40;
-    diffptr  = "Intermediate";
-    tile_count = 16*16;
+    diffptr  = "intermediate";
+    
 }else{//expert 99 mines
     bomb_count = 99;
-    diffptr = "Expert";
+    diffptr = "expert";
 }
-
+tile_count = (i * j) - bomb_count;
 createBomblocale(bomb_count);
 
 for(let k = 0; k < parseInt(bomb_count); k++ ){
@@ -203,99 +206,105 @@ function flagEvent(i, j){
     }
 }
 
-function clickEvent(i,j){ // this will give us the specific cell that we want the event to be attached to
+function handleWin() {
+    updateScores(diffptr, time_count);
+    resetTimer();
+    alert("Congratulations! You've won!");
+    makeUnclickable();
+}
+
+  
+
+  function clickEvent(i, j) {
+    // this will give us the specific cell that we want the event to be attached to
 // my idea is to do BFS search and at each element the style will change and it will stop when it reaches the bound or a value that is not 0
-
-    if(!time_started){
-
+    if (!time_started) {
         startTimer();
         time_started = true;
     }
 
     const cell = document.getElementById(`${i}-${j}`);
-    
-    if(tile_count-- === bomb_count){
 
-        //win
-        resetTimer();
-        bomb_count = 0;
-        tile_count= 0;
-    }
-    else if(matrix[i][j] === - 1){// end the game
-
+    // If this is a bomb, end the game
+    if (matrix[i][j] === -1) {
         endGameLoss();
         resetTimer();
-        bomb_count = 0;
-        tile_count= 0;
-       // cell.style.backgroundImage = "none";
-        //cell.style.backgroundImage = "url('/assets/bomb.png')";
-    }else if(matrix[i][j] !== 0){//this cell would have a bomb next to it so just show this cell
+        return;
+    }
 
+    // Reveal the cell if it's not a bomb
+    if (matrix[i][j] !== 0) { // Numbered cell
         cell.style.backgroundImage = "none";
         cell.style.backgroundImage = `url(/assets/${matrix[i][j]}.png)`;
-        cell.onclick = null;
+        cell.onclick = null; // Prevent re-clicking
+        tile_count--;
 
-    }else{//this cell has no bomb next to it therefore you will have to BFS and show all cells that are also = 0
-
+        // Check for win after decrementing
+        if (tile_count === 0) handleWin();
+    } else { // If it's an empty cell, clear surrounding cells
         clearEvent(i, j);
     }
 }
 
+
 function clearEvent(i, j) {
     const queue = [[i, j]];
-    const marked = [];
-    
-    // Initialize marked array
+    let marked = [];
+
     for (let k = 0; k < matrix.length; k++) {
         marked[k] = [];
         for (let p = 0; p < matrix[0].length; p++) {
-            marked[k][p] = 0;  // Initialize with zeros
+            marked[k][p] = parseInt(0);  // Initialize with zeros
         }
     }
-    
-    marked[i][j] = 1; // Start position marked as visited
+
+    marked[i][j] = parseInt(1); // Mark starting cell as visited
     const cell = document.getElementById(`${i}-${j}`);
     cell.style.backgroundImage = "none";
     cell.style.backgroundImage = "url('/cellassets/clicked.png')";
-    
+
+    tile_count--; // Decrement for the first cell
+    if (tile_count === 0) handleWin(); // Check for win
+
     while (queue.length > 0) {
         const [currentX, currentY] = queue.shift();
-        console.log(`Visiting cell (${currentX}, ${currentY}) with value: ${matrix[currentX][currentY]}`);
-        
-        // Define direct neighbors (up, down, left, right)
+
+        // Define neighbors
         const directions = [
             [0, 1],   // right
             [1, 0],   // down
             [0, -1],  // left
             [-1, 0]   // up
         ];
-        
+
         for (const [dx, dy] of directions) {
             const newX = currentX + dx;
             const newY = currentY + dy;
-            
-            if (inBound(newX, newY) && marked[newX][newY] === 0) {
-                marked[newX][newY] = 1;  // Mark as visited
-                const cell = document.getElementById(`${newX}-${newY}`);
-                
+
+            if (inBound(newX, newY) && marked[newX][newY] !== parseInt(1)) {
+
+                marked[newX][newY] = parseInt(1); 
+                const neighborCell = document.getElementById(`${newX}-${newY}`);
+
                 if (matrix[newX][newY] === 0) {
 
-                    queue.push([newX, newY]);  // Continue BFS only for cells with 0
-                    cell.style.backgroundImage = "none";
-                    cell.style.backgroundImage = "url('/cellassets/clicked.png')";
+                    queue.push([newX, newY]);
+                    neighborCell.style.backgroundImage = "none";
+                    neighborCell.style.backgroundImage = "url('/cellassets/clicked.png')";
 
-                }else{// seperate call for cells that are not 0
-
-                    cell.style.backgroundImage = "none";
-                    cell.style.backgroundImage = `url(/assets/${matrix[newX][newY]}.png)`;
+                } else if (matrix[newX][newY] > 0) { 
+                    neighborCell.style.backgroundImage = "none";
+                    neighborCell.style.backgroundImage = `url(/assets/${matrix[newX][newY]}.png)`;
                 }
 
-                cell.onclick = null;
+                neighborCell.onclick = null;
                 tile_count--;
+                if (tile_count === 0) handleWin();
             }
         }
     }
 }
+
 
 function inBound(i, j){
 
