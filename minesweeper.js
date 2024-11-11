@@ -24,15 +24,14 @@ function resetTimer() {
     time_started = false; 
     time_elapsed = 0; 
     time_count = 0;
-    document.getElementById('time-count').textContent = 0;
+    document.getElementById("time-count").textContent = 0;
   }
 
 function startTimer() {
     timerInterval = setInterval(() => {
       time_count++;
       document.getElementById('time-count').textContent = time_count;
-    }, 1000); 
-   document.addEventListener("visibilitychange", handleVisibilityChange);
+    }, 1000);
   }
 
   function initializeScores(){
@@ -211,6 +210,7 @@ function handleWin() {
     updateScores(diffptr, time_count);
     resetTimer();
     alert("Congratulations! You've won!");
+    revealBombs();
     makeUnclickable();
 }
 
@@ -379,12 +379,32 @@ function makeUnclickable(){// makes minefield unclickable , invoke upon victory 
   
 
 
+function revealBombs(){
+
+    
+    for(let i = 0 ; i < bomblocale.length ; i++ ){
+        
+        let currentBombIndexJ = bomblocale[i][1];
+        let currentBombIndexI = bomblocale[i][0];
+        
+       
+        let currentBomb  = document.getElementById(`${currentBombIndexI}-${currentBombIndexJ}`);
+
+        currentBomb.style.backgroundImage = "none";
+        currentBomb.style.backgroundImage = "url('/assets/bomb.png')";
+
+    }
+
+
+}
+
 
 
 
 
   
 function clearMap() {
+    
     const map = document.getElementById("map");
     while (map.firstChild) {
         map.removeChild(map.firstChild);
