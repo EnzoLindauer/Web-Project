@@ -2,6 +2,9 @@ const matrix = [];
 const bomblocale = [];
 const map = document.getElementById("map");
 
+var difficulty;// string repping the difficulty
+
+let score = 0;
 
 function createBomblocale(mineammount){//makes bombLocale store the i and j indices of the bombs , matrix of mineammount by 2 , as coordinates are i an j
     for (let k = 0; k < mineammount; k++) {
@@ -34,10 +37,13 @@ for (let k = 0; k < i; k++) {
 var mineAmount ;
 if (j === 9) {//easy, 10 mines
     mineAmount = 10;
+    difficulty = "easy";
 }else if(j === 16){//normal, 40 mines
     mineAmount = 40;
+    difficulty = "normal";
 }else{//expert 99 mines
     mineAmount = 99;
+    difficulty = "expert";
 }
 
 createBomblocale(mineAmount);
@@ -69,7 +75,19 @@ printMap(i, j);
 
 }
 
+
+function clearMap() {
+    const map = document.getElementById("map");
+    while (map.firstChild) {
+        map.removeChild(map.firstChild);
+    }
+}
+
+
 function printMap(i, j){
+
+    clearMap();
+    
 
     const table = document.createElement("table"); // this will create the general table
 
@@ -269,7 +287,4 @@ function makeUnclickable(){// makes minefield unclickable , invoke upon victory 
   
 
 
-
-function makeClickable(){// makes minefield clickable , invoke upon resetting the minefield post loss or victory
-
-}
+  
