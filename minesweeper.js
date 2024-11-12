@@ -17,6 +17,7 @@ function resetLocalStorage() {
 function pauseTimer() {
     clearInterval(timerInterval); // Stops the timer
     time_started = false; // Allows the timer to be started again if needed
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 }
 
 function resetTimer() {
@@ -31,6 +32,7 @@ function startTimer() {
     timerInterval = setInterval(() => {
       time_count++;
       document.getElementById('time-count').textContent = time_count;
+      document.addEventListener("visibilitychange", handleVisibilityChange);
     }, 1000);
   }
 
@@ -106,6 +108,9 @@ function createBomblocale(mineammount){
 
 function generateMap(i,j){// i and j passed as arguements , they indicate the dimensions of the minesweeper map , passed per difficulty selection, I is rows and J is columns
 
+    if(time_count !== 0){
+        resetTimer();
+    }
     
 
     // i is rows, j is columns
@@ -405,6 +410,21 @@ function revealBombs(){
 
 }
 
+
+function handleVisibilityChange() {
+    if (document.hidden) {
+      console.log("Page is hidden");
+      // Perform any actions needed when the page is not visible
+      pauseTimer(); // Example: pause the timer if game needs to be paused
+    } else {
+      console.log("Page is visible");
+      // Perform any actions needed when the page becomes visible
+      startTimer(); // Example: resume the timer if the game should continue
+    }
+  }
+  
+  // Add event listener for visibility change
+  
 
 
 
