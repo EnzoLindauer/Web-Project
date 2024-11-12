@@ -26,6 +26,7 @@ function resetTimer() {
     time_elapsed = 0; 
     time_count = 0;
     document.getElementById("time-count").textContent = 0;
+    document.getElementById("bombs-left").textContent = '';
   }
 
 function startTimer() {
@@ -208,20 +209,33 @@ function flagEvent(i, j){
     const cell = document.getElementById(`${i}-${j}`);
 
     if(!cell.classList.contains('flagged')){//this is where you will incrememnt and decrement the bomb counter
+        
+        
+        console.log(bomb_count);
+        
+        
+        if(marked[i][j] !== 1){
 
-        if(bomb_count > 0){
-            bomb_count--;
+            if(bomb_count >= 0){
+
+                bomb_count--;
+            }
+
+            if(bomb_count >= 0){
+            
+            document.querySelector('#bombs-left').textContent = bomb_count;
+            cell.style.backgroundImage = `url(/cellassets/flag.png)`;
+            cell.classList.add('flagged');
         }
         
-        if(bomb_count >= 0){
-        
-        
-        document.querySelector('#bombs-left').textContent = bomb_count;
-        cell.style.backgroundImage = `url(/cellassets/flag.png)`;
-        cell.classList.add('flagged');
         
         }
     }else{
+
+            if(bomb_count === - 1){
+
+                bomb_count = 0;
+            }
 
             cell.style.backgroundImage = "none";
             cell.style.backgroundImage = `url(/cellassets/hover.png)`;
