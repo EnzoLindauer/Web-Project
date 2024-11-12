@@ -17,7 +17,6 @@ function resetLocalStorage() {
 function pauseTimer() {
     clearInterval(timerInterval); // Stops the timer
     time_started = false; // Allows the timer to be started again if needed
-    document.addEventListener("visibilitychange", handleVisibilityChange);
 }
 
 function resetTimer() {
@@ -26,14 +25,12 @@ function resetTimer() {
     time_elapsed = 0; 
     time_count = 0;
     document.getElementById("time-count").textContent = 0;
-    document.getElementById("bombs-left").textContent = '';
   }
 
 function startTimer() {
     timerInterval = setInterval(() => {
       time_count++;
       document.getElementById('time-count').textContent = time_count;
-      document.addEventListener("visibilitychange", handleVisibilityChange);
     }, 1000);
   }
 
@@ -109,9 +106,6 @@ function createBomblocale(mineammount){
 
 function generateMap(i,j){// i and j passed as arguements , they indicate the dimensions of the minesweeper map , passed per difficulty selection, I is rows and J is columns
 
-    if(time_count !== 0){
-        resetTimer();
-    }
     
 
     // i is rows, j is columns
@@ -209,32 +203,29 @@ function flagEvent(i, j){
     const cell = document.getElementById(`${i}-${j}`);
 
     if(!cell.classList.contains('flagged')){//this is where you will incrememnt and decrement the bomb counter
-        
-        
-        console.log(bomb_count);
-        
-        
+
+
         if(marked[i][j] !== 1){
 
             if(bomb_count >= 0){
-
                 bomb_count--;
             }
-
+            
             if(bomb_count >= 0){
             
             document.querySelector('#bombs-left').textContent = bomb_count;
             cell.style.backgroundImage = `url(/cellassets/flag.png)`;
             cell.classList.add('flagged');
+            
+            }
         }
+
         
-        
-        }
     }else{
 
-            if(bomb_count === - 1){
+            if(bomb_count === -1){
 
-                bomb_count = 0;
+                bomb_count++;
             }
 
             cell.style.backgroundImage = "none";
@@ -440,25 +431,6 @@ function revealBombs(){
 
 
 }
-
-
-function handleVisibilityChange() {
-    if (document.hidden) {
-      console.log("Page is hidden");
-      // Perform any actions needed when the page is not visible
-      pauseTimer(); // Example: pause the timer if game needs to be paused
-    } else {
-      console.log("Page is visible");
-      // Perform any actions needed when the page becomes visible
-      startTimer(); // Example: resume the timer if the game should continue
-    }
-  }
-  
-  // Add event listener for visibility change
-  
-
-
-
 
   
 function clearMap() {
