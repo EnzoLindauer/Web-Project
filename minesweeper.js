@@ -17,6 +17,9 @@ function resetLocalStorage() {
 function pauseTimer() {
     clearInterval(timerInterval); // Stops the timer
     time_started = false; // Allows the timer to be started again if needed
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+     
+     
 }
 
 function resetTimer() {
@@ -31,11 +34,17 @@ function startTimer() {
     timerInterval = setInterval(() => {
       time_count++;
       document.getElementById('time-count').textContent = time_count;
+<<<<<<< Updated upstream
     }, 1000); 
    document.addEventListener("visibilitychange", handleVisibilityChange);
+=======
+      document.addEventListener("visibilitychange", handleVisibilityChange);
+    }, 1000);
+
+>>>>>>> Stashed changes
   }
 
-  function initializeScores(){
+function initializeScores(){
 
     if(!localStorage.getItem('MinesweeperScores')){
 
@@ -48,7 +57,7 @@ function startTimer() {
   }
 
 
-    function displayScores() {
+function displayScores() {
         const scores = JSON.parse(localStorage.getItem('MinesweeperScores'));
         //Olex dont worry the '?' is just an if else so if it is = 999 then display 0 else display normally
         
@@ -68,7 +77,7 @@ function startTimer() {
       }
       
 
-  function updateScores(difficulty, timeTaken){
+function updateScores(difficulty, timeTaken){
 
     const scores = JSON.parse(localStorage.getItem('MinesweeperScores'));
     
@@ -249,6 +258,9 @@ function handleWin() {
 
 
 function clearEvent(i, j) {
+
+
+    
     const queue = [[i, j]];
     let marked = [];
 
@@ -391,3 +403,19 @@ function clearMap() {
     }
    
 }
+
+
+function handleVisibilityChange() {
+    if (document.hidden) {
+      console.log("Page is hidden");
+      // Perform any actions needed when the page is not visible
+      pauseTimer(); // Example: pause the timer if game needs to be paused
+    } else {
+      console.log("Page is visible");
+      // Perform any actions needed when the page becomes visible
+      startTimer(); // Example: resume the timer if the game should continue
+    }
+  }
+  
+ 
+  
