@@ -139,7 +139,8 @@ if (j === 9) {//easy, 10 mines
     bomb_count = 99;
     diffptr = "expert";
 }
-tile_count = (i * j) - bomb_count;
+tile_count = ((i * j) - bomb_count + 2);
+document.querySelector('#bombs-left').textContent = bomb_count;
 createBomblocale(bomb_count);
 
 for(let k = 0; k < parseInt(bomb_count); k++ ){
@@ -203,13 +204,26 @@ function flagEvent(i, j){
 
     if(!cell.classList.contains('flagged')){//this is where you will incrememnt and decrement the bomb counter
 
+        if(bomb_count > 0){
+            bomb_count--;
+        }
+        
+        if(bomb_count >= 0){
+        
+        
+        document.querySelector('#bombs-left').textContent = bomb_count;
         cell.style.backgroundImage = `url(/cellassets/flag.png)`;
         cell.classList.add('flagged');
+        
+        }
     }else{
 
-        cell.style.backgroundImage = "none";
-        cell.style.backgroundImage = `url(/cellassets/hover.png)`;
-        cell.classList.remove('flagged');
+            cell.style.backgroundImage = "none";
+            cell.style.backgroundImage = `url(/cellassets/hover.png)`;
+            cell.classList.remove('flagged');
+            bomb_count++;
+            document.querySelector('#bombs-left').textContent = bomb_count;
+        
     }
 }
 
@@ -260,12 +274,15 @@ function handleWin() {
 function clearEvent(i, j) {
     const queue = [[i, j]];
 
+    if(matrix[i][j] !== 1)
+    tile_count--; // Decrement for the first cell
+
     marked[i][j] = parseInt(1); // Mark starting cell as visited
     const cell = document.getElementById(`${i}-${j}`);
     cell.style.backgroundImage = "none";
     cell.style.backgroundImage = "url('/cellassets/clicked.png')";
 
-    tile_count--; // Decrement for the first cell
+    
     if (tile_count === 0) handleWin(); 
 
     while (queue.length > 0) {
